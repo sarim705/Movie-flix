@@ -17,7 +17,7 @@ function Banner ( {movie} )  {
         cursor: 'pointer'
       }}
  
-      onClick={() => navigate(`/movie/${movie.id}-${movie.title.replace(/\s+/g, '-').toLowerCase()}`)}
+      onClick={() => navigate(`/movies/${movie.id}-${movie.title.replace(/\s+/g, '-').toLowerCase()}`)}
 
     >
       <Typography variant="h3">{movie.title}</Typography>

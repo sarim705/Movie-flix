@@ -23,7 +23,7 @@ const MovieDetailPage = () => {
 
   return (
     <Box sx={{ maxWidth: 800, margin: 'auto', padding: 3 }}>
-      {/* Back Button */}
+      
       <Button
         variant="outlined"
         onClick={() => navigate(-1)}
