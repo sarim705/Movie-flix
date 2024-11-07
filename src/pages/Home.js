@@ -3,7 +3,7 @@ import { fetchMovies, fetchGenres, searchMovies } from '../api';
 import MovieCard from '../components/MovieCard';
 import PaginationControls from '../components/PaginationControls';
 import Banner from '../components/Banner';
-import { Grid2, InputBase, Paper, IconButton } from '@mui/material';
+import { Grid2, InputBase, Paper, IconButton, Snackbar } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 
 function Home() {
@@ -11,8 +11,10 @@ function Home() {
   const [favorites, setFavorites] = useState(JSON.parse(localStorage.getItem('favorites')) || []);
   const [page, setPage] = useState(1);
   const [searchQuery, setSearchQuery] = useState('');
+  const [debouncedQuery, setDebouncedQuery] = useState('');
   const [bannerMovie, setBannerMovie] = useState(null);
   const [genres, setGenres] = useState({});
+  const [notification, setNotification] = useState(''); 
 
   const handleToggleFavorite = (movie) => {
     const updatedFavorites = favorites.some(fav => fav.id === movie.id)
@@ -21,6 +23,11 @@ function Home() {
 
     setFavorites(updatedFavorites);
     localStorage.setItem('favorites', JSON.stringify(updatedFavorites));
+  };
+
+  const showNotification = (message) => {
+    setNotification(message);
+    setTimeout(() => setNotification(''), 3000); 
   };
 
   useEffect(() => {
@@ -38,8 +45,18 @@ function Home() {
   };
 
   useEffect(() => {
-    loadMovies(page, searchQuery);
-  }, [page, searchQuery]);
+    const handler = setTimeout(() => {
+      setDebouncedQuery(searchQuery);
+    }, 300);
+
+    return () => {
+      clearTimeout(handler);
+    };
+  }, [searchQuery]);
+
+  useEffect(() => {
+    loadMovies(page, debouncedQuery);
+  }, [page, debouncedQuery]);
 
   const handleSearchChange = (e) => {
     setSearchQuery(e.target.value);
@@ -49,17 +66,23 @@ function Home() {
     <div>
       {bannerMovie && <Banner movie={bannerMovie} />}
 
-     
+      <Snackbar
+        open={!!notification}
+        message={notification}
+        anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+        autoHideDuration={3000}
+      />
+
       <Grid2 container justifyContent="center" sx={{ padding: '20px 10px' }}>
-        <Grid2 item xs={12} sm={10} md={8}>
+        <Grid2 item xs={10} sm={10} md={8}>
           <Paper
             component="form"
-            onSubmit={(e) => e.preventDefault()} 
+            onSubmit={(e) => e.preventDefault()}
             sx={{
               display: 'flex',
               alignItems: 'center',
-              width: '100%',
-              padding: '4px 8px',
+              width: '150%',
+              padding: '0.7px 5px',
               borderRadius: '25px',
               boxShadow: '0 4px 10px rgba(0, 0, 0, 0.1)',
               backgroundColor: '#f5f5f5',
@@ -83,7 +106,6 @@ function Home() {
         </Grid2>
       </Grid2>
 
-      {/* Movies Grid */}
       <Grid2 container spacing={3}>
         {movies.map((movie) => (
           <MovieCard
@@ -92,6 +114,7 @@ function Home() {
             genres={genres}
             onToggleFavorite={handleToggleFavorite}
             isFavorite={favorites.some(fav => fav.id === movie.id)}
+            showNotification={showNotification}
           />
         ))}
       </Grid2>

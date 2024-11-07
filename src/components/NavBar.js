@@ -8,7 +8,7 @@ function NavBar() {
     <AppBar position="static" sx={{ backgroundColor: '#2c3e50' }}>
       <Toolbar sx={{ display: 'flex', justifyContent: 'space-between' }}>
         <Typography variant="h6" component="div" sx={{ fontWeight: 'bold' }}>
-          MovieApp
+          MovieFlix
         </Typography>
         
         <Box sx={{ display: 'flex', gap: 2 }}>

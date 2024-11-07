@@ -12,7 +12,7 @@ function Banner ( {movie} )  {
         backgroundImage: `linear-gradient(to bottom, rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.9)), url(${bannerUrl})`,
         backgroundSize: 'cover',
         color: 'white',
-        padding: '5% 30%',
+        padding: '4% 5%',
         textAlign: 'center',
         cursor: 'pointer'
       }}
